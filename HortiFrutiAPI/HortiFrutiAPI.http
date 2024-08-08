@@ -1,0 +1,6 @@
+@HortiFrutiAPI_HostAddress = http://localhost:5216
+
+GET {{HortiFrutiAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
