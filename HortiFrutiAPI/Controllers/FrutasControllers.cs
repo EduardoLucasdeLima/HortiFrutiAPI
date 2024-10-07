@@ -2,6 +2,7 @@
 using HortiFrutiAPI.DTOs;
 using HortiFrutiAPI.Models;
 using HortiFrutiAPI.Repositories;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -72,6 +73,33 @@ public class FrutasController : ControllerBase
         return new CreatedAtRouteResult("ObterFruta",
             new { id = novaFrutaDto.FrutaId }, novaFrutaDto);
     }
+
+    [HttpPatch("{id}/UpdatePartial")]
+    public ActionResult<FrutaDTOUpdateResponse> Patch(int id, JsonPatchDocument<FrutaDTOUpdateRequest> patchFrutaDTO)
+    {
+        if (patchFrutaDTO is null || id <= 0)
+            return BadRequest();
+
+        var fruta = _uof.FrutaRepository.Get(c => c.FrutaId == id);
+
+        if (fruta is null)
+            return NotFound();
+
+        var frutaUpdateRequest = _mapper.Map<FrutaDTOUpdateRequest>(fruta);
+
+        patchFrutaDTO.ApplyTo(frutaUpdateRequest, ModelState);
+
+        if (!ModelState.IsValid || TryValidateModel(frutaUpdateRequest))
+            return BadRequest();
+
+        _mapper.Map(frutaUpdateRequest, fruta);
+
+        _uof.FrutaRepository.Update(fruta);
+        _uof.Commit();
+
+        return Ok(_mapper.Map<FrutaDTOUpdateResponse>(fruta));
+    }
+
 
     [HttpPut("{id:int}")]
     public ActionResult<FrutaDTO> Put(int id, FrutaDTO frutaDto)

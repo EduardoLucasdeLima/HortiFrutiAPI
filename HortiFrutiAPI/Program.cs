@@ -18,7 +18,7 @@ builder.Services.AddControllers(options =>
 .AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
+}).AddNewtonsoftJson();
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -47,7 +47,6 @@ builder.Services.AddAutoMapper(typeof(FrutaDTOMappingProfile));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

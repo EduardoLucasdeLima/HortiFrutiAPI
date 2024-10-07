@@ -9,5 +9,7 @@ public class FrutaDTOMappingProfile : Profile
     {
         CreateMap<Fruta, FrutaDTO>().ReverseMap();
         CreateMap<Categoria, CategoriaDTO>().ReverseMap();
+        CreateMap<Fruta, FrutaDTOUpdateRequest>().ReverseMap();
+        CreateMap<Fruta, FrutaDTOUpdateResponse>().ReverseMap();
     }
 }
